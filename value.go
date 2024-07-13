@@ -37,3 +37,14 @@ func Value[V any](dict Dict, prop string) (V, error) {
 		return val, nil
 	}
 }
+
+// ValueOr ... write the comments
+func ValueOr[V any](dict Dict, prop string, defaultVal V) (V, error) {
+	if someval, exist := dict[prop]; !exist {
+		return defaultVal, nil
+	} else if val, ok := someval.(V); ok {
+		return val, nil
+	} else {
+		return val, fmt.Errorf("prop %s is not of type %T", prop, val)
+	}
+}
