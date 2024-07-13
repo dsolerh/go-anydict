@@ -24,12 +24,12 @@ import "fmt"
 //   - the value cannot be represented by the expected return type
 //
 // For more info check the test cases at value_test.go
-func Value[V any](d Dict, prop string) (V, error) {
-	if val, ok := d[prop].(V); !ok {
+func Value[V any](dict Dict, prop string) (V, error) {
+	if val, ok := dict[prop].(V); !ok {
 		if prop == "" {
 			return val, fmt.Errorf("invalid empty property")
 		}
-		if _, exist := d[prop]; exist {
+		if _, exist := dict[prop]; exist {
 			return val, fmt.Errorf("prop %s is not present in the dict", prop)
 		}
 		return val, fmt.Errorf("prop %s is not of type %T", prop, val)
