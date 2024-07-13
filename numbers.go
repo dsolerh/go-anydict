@@ -1,7 +1,5 @@
 package anydict
 
-import "fmt"
-
 type IntegerLike interface {
 	~int | ~int8 | ~int16 | ~int32 | ~int64
 }
@@ -9,18 +7,14 @@ type IntegerLike interface {
 func IntegerSafeConvert[ISrc, IDst IntegerLike](val ISrc) (IDst, error) {
 	val2 := IDst(val)
 	if ISrc(val2) != val {
-		return IDst(0), fmt.Errorf(
-			"cannot be safely converted from '%T' to '%T'",
-			val,
-			val2,
-		)
+		return IDst(0), newInvalidConversionError(val, val2)
 	}
 	return val2, nil
 }
 
 func Integer[I IntegerLike](dict Dict, prop string) (I, error) {
 	if someval, exist := dict[prop]; !exist {
-		return 0, fmt.Errorf("prop %s is not present in the dict", prop)
+		return 0, newPropNotPresentError(prop)
 	} else {
 		switch val := someval.(type) {
 		case I:
@@ -37,7 +31,7 @@ func Integer[I IntegerLike](dict Dict, prop string) (I, error) {
 			return IntegerSafeConvert[int64, I](val)
 		default:
 			var zero I
-			return zero, fmt.Errorf("prop %s is not of type %T", prop, zero)
+			return zero, newPropNotOfTypeError(prop, zero)
 		}
 	}
 }

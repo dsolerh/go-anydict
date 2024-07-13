@@ -26,7 +26,7 @@ import "fmt"
 // For more info check the test cases at value_test.go
 func Value[V any](dict Dict, prop string) (V, error) {
 	if someval, exist := dict[prop]; !exist {
-		return zero[V](), fmt.Errorf("prop %s is not present in the dict", prop)
+		return zero[V](), newPropNotPresentError(prop)
 	} else if val, ok := someval.(V); !ok {
 		return val, fmt.Errorf("prop %s is not of type %T", prop, val)
 	} else {
@@ -41,6 +41,6 @@ func ValueOr[V any](dict Dict, prop string, defaultVal V) (V, error) {
 	} else if val, ok := someval.(V); ok {
 		return val, nil
 	} else {
-		return val, fmt.Errorf("prop %s is not of type %T", prop, val)
+		return val, newPropNotOfTypeError(prop, val)
 	}
 }
