@@ -141,3 +141,81 @@ func Test_Value(t *testing.T) {
 		})
 	}
 }
+
+func valOrExecutor[T any](d Dict, prop string, defaultVal any) (any, error) {
+	val, err := ValueOr(d, prop, defaultVal.(T))
+	return any(val), err
+}
+
+func Test_ValueOr(t *testing.T) {
+	dict := Dict{
+		"int":  int(23),
+		"i32":  int32(32),
+		"i64":  int64(64),
+		"str":  "some interesting quote",
+		"f32":  float32(32.1),
+		"f64":  float64(64.1),
+		"bool": true,
+	}
+
+	type TestCase struct {
+		desc        string
+		prop        string
+		executor    func(Dict, string, any) (any, error)
+		defaultVal  any
+		expectedVal any
+		expectErr   bool
+	}
+	testcases := []TestCase{
+		{
+			desc:        "should return the value from the dict",
+			prop:        "str",
+			executor:    valOrExecutor[string],
+			defaultVal:  "something",
+			expectedVal: dict["str"],
+			expectErr:   false,
+		},
+		{
+			desc:        "should return the default value",
+			prop:        "not-key",
+			executor:    valOrExecutor[string],
+			defaultVal:  "something",
+			expectedVal: "something",
+			expectErr:   false,
+		},
+		{
+			desc:        "should return an error: invalid type",
+			prop:        "str",
+			executor:    valOrExecutor[int],
+			defaultVal:  19,
+			expectedVal: nil,
+			expectErr:   true,
+		},
+	}
+
+	for _, tc := range testcases {
+		t.Run(tc.desc, func(t *testing.T) {
+			val, err := tc.executor(dict, tc.prop, tc.defaultVal)
+			didErr := err != nil
+
+			if tc.expectErr != didErr {
+				t.Errorf(
+					"expected an error: %v, but got one: %v(%v) val: %T(%v)",
+					tc.expectErr,
+					didErr,
+					err,
+					val,
+					val,
+				)
+			} else if !tc.expectErr && !reflect.DeepEqual(val, tc.expectedVal) {
+				t.Errorf(
+					"expected val: %T(%v), but got: %T(%v)",
+					tc.expectedVal,
+					tc.expectedVal,
+					val,
+					val,
+				)
+			}
+		})
+	}
+}
