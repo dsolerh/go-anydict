@@ -115,7 +115,7 @@ func Test_Value(t *testing.T) {
 
 			if tc.expectErr != didErr {
 				t.Errorf(
-					"expected an error: %v, but got one: %v(%v) val: %T(%v)",
+					"expected an error: %t, but got one: %t(%v) val: %T(%v)",
 					tc.expectErr,
 					didErr,
 					err,
@@ -193,7 +193,7 @@ func Test_ValueOr(t *testing.T) {
 
 			if tc.expectErr != didErr {
 				t.Errorf(
-					"expected an error: %v, but got one: %v(%v) val: %T(%v)",
+					"expected an error: %t, but got one: %t(%v) val: %T(%v)",
 					tc.expectErr,
 					didErr,
 					err,
