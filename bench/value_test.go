@@ -66,3 +66,32 @@ func Benchmark_Value_int(b *testing.B) {
 		someint = _int
 	})
 }
+
+func Benchmark_ValueOr_string(b *testing.B) {
+	var dict = anydict.Dict{
+		"prop": "some interesting value",
+	}
+	directCast := func(d anydict.Dict, prop string, defaultVal string) (string, error) {
+		if someval, exist := d[prop]; !exist {
+			return defaultVal, nil
+		} else if val, ok := someval.(string); ok {
+			return val, nil
+		} else {
+			return val, fmt.Errorf("prop %s is not of type %T", prop, val)
+		}
+	}
+
+	var _str string
+	b.Run("using ValueOr[string]", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_str, _ = anydict.ValueOr(dict, "prop", "the fallback")
+		}
+		somestr = _str
+	})
+	b.Run("using direct cast", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			_str, _ = directCast(dict, "prop", "the fallback")
+		}
+		somestr = _str
+	})
+}
