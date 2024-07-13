@@ -7,7 +7,11 @@ import (
 	"githug.com/dsolerh/go-anydict"
 )
 
-var str string
+// this variables are used to prevent some compiler optimization
+var (
+	somestr string
+	someint int
+)
 
 func Benchmark_Value_string(b *testing.B) {
 	var dict = anydict.Dict{
@@ -26,17 +30,15 @@ func Benchmark_Value_string(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			_str, _ = anydict.Value[string](dict, "prop")
 		}
-		str = _str
+		somestr = _str
 	})
 	b.Run("using direct cast", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			_str, _ = directCast(dict, "prop")
 		}
-		str = _str
+		somestr = _str
 	})
 }
-
-var someint int
 
 func Benchmark_Value_int(b *testing.B) {
 	var dict = anydict.Dict{
@@ -51,7 +53,7 @@ func Benchmark_Value_int(b *testing.B) {
 	}
 
 	var _int int
-	b.Run("using Value[string]", func(b *testing.B) {
+	b.Run("using Value[int]", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			_int, _ = anydict.Value[int](dict, "prop")
 		}
