@@ -30,13 +30,6 @@ func Test_Value(t *testing.T) {
 	}
 	testcases := []TestCase{
 		{
-			desc:        "should get an error: invalid empty prop",
-			prop:        "",
-			executor:    Value[any],
-			expectedVal: nil,
-			expectErr:   true,
-		},
-		{
 			desc:        "should get an error: invalid prop type (string -> int)",
 			prop:        "int",
 			executor:    valExecutor[string],

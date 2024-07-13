@@ -25,13 +25,9 @@ import "fmt"
 //
 // For more info check the test cases at value_test.go
 func Value[V any](dict Dict, prop string) (V, error) {
-	if val, ok := dict[prop].(V); !ok {
-		if prop == "" {
-			return val, fmt.Errorf("invalid empty property")
-		}
-		if _, exist := dict[prop]; exist {
-			return val, fmt.Errorf("prop %s is not present in the dict", prop)
-		}
+	if someval, exist := dict[prop]; !exist {
+		return zero[V](), fmt.Errorf("prop %s is not present in the dict", prop)
+	} else if val, ok := someval.(V); !ok {
 		return val, fmt.Errorf("prop %s is not of type %T", prop, val)
 	} else {
 		return val, nil
