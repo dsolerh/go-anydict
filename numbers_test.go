@@ -7,7 +7,7 @@ import (
 	testutils "githug.com/dsolerh/go-anydict/test_utils"
 )
 
-func intExecutor[T IntegerLike](d Dict, prop string) (any, error) {
+func intExecutor[T integers](d Dict, prop string) (any, error) {
 	val, err := Integer[T](d, prop)
 	return any(val), err
 }
@@ -56,7 +56,7 @@ func Test_Integer(t *testing.T) {
 	})
 }
 
-func intOrExecutor[T IntegerLike](defaultVal T) testutils.FuncExecutor {
+func intOrExecutor[T integers](defaultVal T) testutils.FuncExecutor {
 	return func(m map[string]any, s string) (any, error) {
 		val, err := IntegerOr(m, s, defaultVal)
 		return any(val), err
@@ -84,7 +84,7 @@ func Test_IntegerOr(t *testing.T) {
 	})
 }
 
-func floatExecutor[T FloatLike](d Dict, prop string) (any, error) {
+func floatExecutor[T floats](d Dict, prop string) (any, error) {
 	val, err := Float[T](d, prop)
 	return any(val), err
 }
@@ -133,7 +133,7 @@ func Test_Float(t *testing.T) {
 	})
 }
 
-func floatOrExecutor[T FloatLike](defaultVal T) testutils.FuncExecutor {
+func floatOrExecutor[T floats](defaultVal T) testutils.FuncExecutor {
 	return func(m map[string]any, s string) (any, error) {
 		val, err := FloatOr(m, s, defaultVal)
 		return any(val), err
