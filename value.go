@@ -32,7 +32,8 @@ func Value[V any](dict Dict, prop string) (V, error) {
 	}
 }
 
-// ValueOr ... write the comments
+// ValueOr works in the same way as value, but if the prop is not present
+// it'll return defaultVal
 func ValueOr[V any](dict Dict, prop string, defaultVal V) (V, error) {
 	if someval, exist := dict[prop]; !exist {
 		return defaultVal, nil

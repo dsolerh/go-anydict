@@ -9,6 +9,7 @@ const (
 	_CONVERT_FROM_TO  = "cannot be safely converted from '%T' to '%T'"
 )
 
+// PropNotPresentError is used when the prop is not present in the Dict
 type PropNotPresentError struct {
 	msg string
 }
@@ -25,6 +26,8 @@ func newPropNotPresentError(prop string) error {
 	}
 }
 
+// PropNotOfTypeError is used when the prop is not of the specified type
+// (or cannot be casted to that type)
 type PropNotOfTypeError struct {
 	msg string
 }
@@ -41,6 +44,11 @@ func newPropNotOfTypeError[T any](prop string, val T) error {
 	}
 }
 
+// InvalidConversionError is used when the prop cannot be safely converted
+// from his original type to the requested one, like:
+//
+//	original := int(2345)
+//	requested := int8(original)  <- this will fail, cause the value 2345 cannot be represented in int8
 type InvalidConversionError struct {
 	msg string
 }

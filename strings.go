@@ -18,6 +18,15 @@ func toString[S strings](someval any, prop string) (S, error) {
 	}
 }
 
+// String returns an S (~string | ~[]byte) or an error.
+// If prop is not found in the dict an error (*PropNotPresentError)
+// If prop is not of a type compatible with S like:
+//   - a string
+//   - a []byte
+//   - or a custom type of one of the previous
+//
+// It'll return an error (*PropNotOfTypeError)
+// Otherwise it'll return the value in the specified type.
 func String[S strings](dict Dict, prop string) (S, error) {
 	if someval, exist := dict[prop]; !exist {
 		return zero[S](), newPropNotPresentError(prop)
@@ -26,6 +35,8 @@ func String[S strings](dict Dict, prop string) (S, error) {
 	}
 }
 
+// StringOr works in the same way as String, but if the prop is not present
+// it'll return defaultVal.
 func StringOr[S strings](dict Dict, prop string, defaultVal S) (S, error) {
 	if someval, exist := dict[prop]; !exist {
 		return defaultVal, nil

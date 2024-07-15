@@ -4,6 +4,9 @@ type integers interface {
 	~int | ~int8 | ~int16 | ~int32 | ~int64
 }
 
+// IntegerSafeConvert tries to convert val from the ISrc type to IDst (both `integers`).
+// If the value can be represented with no loss the val in IDst type is returned,
+// otherwise an error (*InvalidConversionError) is returned.
 func IntegerSafeConvert[ISrc, IDst integers](val ISrc) (IDst, error) {
 	val2 := IDst(val)
 	if ISrc(val2) != val {
@@ -32,6 +35,11 @@ func toInteger[I integers](someval any, prop string) (I, error) {
 	}
 }
 
+// Integer tries to get prop from dict.
+// If prop is not present an error (*PropNotPresentError) is returned.
+// If prop cannot be represented as an integer (~int | ~int8 | ~int16 | ~int32 | ~int64)
+// an error (*InvalidConversionError) is returned.
+// Otherwise the value is returned with the proper type.
 func Integer[I integers](dict Dict, prop string) (I, error) {
 	if someval, exist := dict[prop]; !exist {
 		return 0, newPropNotPresentError(prop)
@@ -40,6 +48,8 @@ func Integer[I integers](dict Dict, prop string) (I, error) {
 	}
 }
 
+// IntegerOr works in the same way as Integer, but if the prop is not present
+// it'll return defaultVal.
 func IntegerOr[I integers](dict Dict, prop string, defaultVal I) (I, error) {
 	if someval, exist := dict[prop]; !exist {
 		return defaultVal, nil
@@ -52,6 +62,9 @@ type floats interface {
 	~float32 | ~float64
 }
 
+// FloatSafeConvert tries to convert val from the ISrc type to IDst (both `integers`).
+// If the value can be represented with no loss the val in IDst type is returned,
+// otherwise an error (*InvalidConversionError) is returned.
 func FloatSafeConvert[FSrc, FDst floats](val FSrc) (FDst, error) {
 	val2 := FDst(val)
 	if FSrc(val2) != val {
@@ -74,6 +87,11 @@ func toFloat[F floats](someval any, prop string) (F, error) {
 	}
 }
 
+// Float tries to get prop from dict.
+// If prop is not present an error (*PropNotPresentError) is returned.
+// If prop cannot be represented as an integer (~int | ~int8 | ~int16 | ~int32 | ~int64)
+// an error (*InvalidConversionError) is returned.
+// Otherwise the value is returned with the proper type.
 func Float[F floats](dict Dict, prop string) (F, error) {
 	if someval, exist := dict[prop]; !exist {
 		return 0, newPropNotPresentError(prop)
@@ -82,6 +100,8 @@ func Float[F floats](dict Dict, prop string) (F, error) {
 	}
 }
 
+// FloatOr works in the same way as Float, but if the prop is not present
+// it'll return defaultVal.
 func FloatOr[F floats](dict Dict, prop string, defaultVal F) (F, error) {
 	if someval, exist := dict[prop]; !exist {
 		return defaultVal, nil
