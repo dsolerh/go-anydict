@@ -1,7 +1,5 @@
 package anydict
 
-import "fmt"
-
 // Value returns the value of a given 'prop' string in a given 'dict' Dict
 // the Dict type is an alias over a map[string]any
 // the main usage of this function is to get the value out of the dict already casted to the desired type
@@ -28,7 +26,7 @@ func Value[V any](dict Dict, prop string) (V, error) {
 	if someval, exist := dict[prop]; !exist {
 		return zero[V](), newPropNotPresentError(prop)
 	} else if val, ok := someval.(V); !ok {
-		return val, fmt.Errorf("prop %s is not of type %T", prop, val)
+		return val, newPropNotOfTypeError(prop, val)
 	} else {
 		return val, nil
 	}

@@ -2,8 +2,9 @@ package anydict
 
 import (
 	"math"
-	"reflect"
 	"testing"
+
+	testutils "githug.com/dsolerh/go-anydict/test_utils"
 )
 
 func intExecutor[T IntegerLike](d Dict, prop string) (any, error) {
@@ -18,68 +19,39 @@ func Test_Integer(t *testing.T) {
 		"big":     math.MinInt64,
 		"invalid": "invalid",
 	}
-	type TestCase struct {
-		desc        string
-		prop        string
-		executor    func(Dict, string) (any, error)
-		expectedVal any
-		expectErr   bool
-	}
-	testcases := []TestCase{
+	testutils.RunTestCases(t, dict, []testutils.TestCase{
 		{
-			desc:        "should return an int",
-			prop:        "int",
-			executor:    intExecutor[int],
-			expectedVal: dict["int"],
+			Desc:        "should return an int",
+			Prop:        "int",
+			Executor:    intExecutor[int],
+			ExpectedVal: dict["int"],
 		},
 		{
-			desc:      "should return an error: not present",
-			prop:      "no-prop",
-			executor:  intExecutor[int],
-			expectErr: true,
+			Desc:           "should return an error: not present",
+			Prop:           "no-prop",
+			Executor:       intExecutor[int],
+			ExpectErr:      true,
+			CheckErrorWith: testutils.IsErrorOfType[*PropNotPresentError],
 		},
 		{
-			desc:      "should return an error: invalid type",
-			prop:      "invalid",
-			executor:  intExecutor[int],
-			expectErr: true,
+			Desc:           "should return an error: invalid type",
+			Prop:           "invalid",
+			Executor:       intExecutor[int],
+			ExpectErr:      true,
+			CheckErrorWith: testutils.IsErrorOfType[*PropNotOfTypeError],
 		},
 		{
-			desc:      "should return an error: cannot downcast",
-			prop:      "big",
-			executor:  intExecutor[int8],
-			expectErr: true,
+			Desc:           "should return an error: cannot downcast",
+			Prop:           "big",
+			Executor:       intExecutor[int8],
+			ExpectErr:      true,
+			CheckErrorWith: testutils.IsErrorOfType[*InvalidConversionError],
 		},
 		{
-			desc:        "should return a custom type",
-			prop:        "int",
-			executor:    intExecutor[myCustomInt],
-			expectedVal: myCustomInt(23),
+			Desc:        "should return a custom type",
+			Prop:        "int",
+			Executor:    intExecutor[myCustomInt],
+			ExpectedVal: myCustomInt(23),
 		},
-	}
-	for _, tc := range testcases {
-		t.Run(tc.desc, func(t *testing.T) {
-			val, err := tc.executor(dict, tc.prop)
-			didErr := err != nil
-
-			if tc.expectErr != didErr {
-				t.Errorf(
-					"expected an error: %t, but got one: %t(%v) val: %T(%v)",
-					tc.expectErr,
-					didErr,
-					err,
-					val,
-					val,
-				)
-			} else if !tc.expectErr && !reflect.DeepEqual(val, tc.expectedVal) {
-				t.Errorf(
-					"expected val: %T(%v), but got: %T(%v)",
-					tc.expectedVal,
-					tc.expectedVal,
-					val,
-					val,
-				)
-			}
-		})
-	}
+	})
 }
