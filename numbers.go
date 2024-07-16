@@ -36,10 +36,9 @@ func toInteger[I integers](someval any, prop string) (I, error) {
 }
 
 // Integer tries to get prop from dict.
-// If prop is not present an error (*PropNotPresentError) is returned.
-// If prop cannot be represented as an integer (~int | ~int8 | ~int16 | ~int32 | ~int64)
-// an error (*InvalidConversionError) is returned.
-// Otherwise the value is returned with the proper type.
+//   - If prop is not present an error (*PropNotPresentError) is returned.
+//   - If prop cannot be represented as an integer (~int | ~int8 | ~int16 | ~int32 | ~int64) an error (*InvalidConversionError) is returned.
+//   - Otherwise the value is returned with the proper type.
 func Integer[I integers](dict Dict, prop string) (I, error) {
 	if someval, exist := dict[prop]; !exist {
 		return 0, newPropNotPresentError(prop)
@@ -88,10 +87,9 @@ func toFloat[F floats](someval any, prop string) (F, error) {
 }
 
 // Float tries to get prop from dict.
-// If prop is not present an error (*PropNotPresentError) is returned.
-// If prop cannot be represented as an integer (~int | ~int8 | ~int16 | ~int32 | ~int64)
-// an error (*InvalidConversionError) is returned.
-// Otherwise the value is returned with the proper type.
+//   - If prop is not present an error (*PropNotPresentError) is returned.
+//   - If prop cannot be represented as an integer (~int | ~int8 | ~int16 | ~int32 | ~int64) an error (*InvalidConversionError) is returned.
+//   - Otherwise the value is returned with the proper type.
 func Float[F floats](dict Dict, prop string) (F, error) {
 	if someval, exist := dict[prop]; !exist {
 		return 0, newPropNotPresentError(prop)
