@@ -17,18 +17,22 @@ func transformArr[T any](arr []any) ([]T, error) {
 	return rval, nil
 }
 
+func toArray[T any](someval any, prop string) ([]T, error) {
+	switch arr := someval.(type) {
+	case []T:
+		return arr, nil
+	case []any:
+		return transformArr[T](arr)
+	default:
+		return nil, newPropNotOfTypeError(prop, ([]T)(nil))
+	}
+}
+
 func Array[T any](dict Dict, prop string) ([]T, error) {
 	if someval, exist := dict[prop]; !exist {
 		return nil, newPropNotPresentError(prop)
 	} else {
-		switch arr := someval.(type) {
-		case []T:
-			return arr, nil
-		case []any:
-			return transformArr[T](arr)
-		default:
-			return nil, newPropNotOfTypeError(prop, ([]T)(nil))
-		}
+		return toArray[T](someval, prop)
 	}
 }
 
@@ -36,13 +40,6 @@ func ArrayOr[T any](dict Dict, prop string, defaultVar []T) ([]T, error) {
 	if someval, exist := dict[prop]; !exist {
 		return defaultVar, nil
 	} else {
-		switch arr := someval.(type) {
-		case []T:
-			return arr, nil
-		case []any:
-			return transformArr[T](arr)
-		default:
-			return nil, newPropNotOfTypeError(prop, ([]T)(nil))
-		}
+		return toArray[T](someval, prop)
 	}
 }
