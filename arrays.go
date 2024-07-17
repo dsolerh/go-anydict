@@ -45,5 +45,4 @@ func ArrayOr[T any](dict Dict, prop string, defaultVar []T) ([]T, error) {
 			return nil, newPropNotOfTypeError(prop, ([]T)(nil))
 		}
 	}
-
 }
