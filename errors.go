@@ -66,18 +66,18 @@ func newInvalidConversionError[F, T any](from F, to T) error {
 	}
 }
 
-type InvalidTypeAtIndex struct {
+type InvalidTypeAtIndexError struct {
 	msg string
 }
 
-var _ error = (*InvalidTypeAtIndex)(nil)
+var _ error = (*InvalidTypeAtIndexError)(nil)
 
-func (e *InvalidTypeAtIndex) Error() string {
+func (e *InvalidTypeAtIndexError) Error() string {
 	return e.msg
 }
 
 func newInvalidTypeAtIndex[T any](index int, val T) error {
-	return &InvalidTypeAtIndex{
+	return &InvalidTypeAtIndexError{
 		msg: fmt.Sprintf(_INVALID_TYPE_AT_INDEX, val, index),
 	}
 }
