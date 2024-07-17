@@ -4,9 +4,10 @@ import "fmt"
 
 // some util constants to avoid repetition
 const (
-	_PROP_NOT_PRESENT = "prop %s is not present in the dict"
-	_PROP_NOT_OF_TYPE = "prop %s is not of type %T"
-	_CONVERT_FROM_TO  = "cannot be safely converted from '%T' to '%T'"
+	_PROP_NOT_PRESENT      = "prop %s is not present in the dict"
+	_PROP_NOT_OF_TYPE      = "prop %s is not of type %T"
+	_CONVERT_FROM_TO       = "cannot be safely converted from '%T' to '%T'"
+	_INVALID_TYPE_AT_INDEX = "invalid type %T at index %d"
 )
 
 // PropNotPresentError is used when the prop is not present in the Dict
@@ -62,5 +63,21 @@ func (e *InvalidConversionError) Error() string {
 func newInvalidConversionError[F, T any](from F, to T) error {
 	return &InvalidConversionError{
 		msg: fmt.Sprintf(_CONVERT_FROM_TO, from, to),
+	}
+}
+
+type InvalidTypeAtIndex struct {
+	msg string
+}
+
+var _ error = (*InvalidTypeAtIndex)(nil)
+
+func (e *InvalidTypeAtIndex) Error() string {
+	return e.msg
+}
+
+func newInvalidTypeAtIndex[T any](index int, val T) error {
+	return &InvalidTypeAtIndex{
+		msg: fmt.Sprintf(_INVALID_TYPE_AT_INDEX, val, index),
 	}
 }
