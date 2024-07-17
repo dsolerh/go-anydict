@@ -68,7 +68,6 @@ func strOrExecutor[T strings](defaultVal T) testutils.FuncExecutor {
 }
 
 func Test_StringOr(t *testing.T) {
-	type customBytes []byte
 	dict := Dict{
 		"str":      "the boy and the heron",
 		"non_utf8": []byte{0xC3, 0x28},

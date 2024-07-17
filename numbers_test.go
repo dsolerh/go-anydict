@@ -64,7 +64,6 @@ func intOrExecutor[T integers](defaultVal T) testutils.FuncExecutor {
 }
 
 func Test_IntegerOr(t *testing.T) {
-	type myCustomInt int
 	dict := Dict{
 		"int": int(23),
 	}
